@@ -98,12 +98,10 @@ class AnnonceController extends AbstractController
          */
         $repository = $this->getDoctrine()->getRepository(Annonce::class);
 
-        $params = [
+        $annonces = $repository->findBySearch([
             'betterThan' => $request->query->getInt('better-than'),
             'newerThan' => $request->query->get('newer-than')
-        ];
-
-        $annonces = $repository->findBySearch($params);
+        ]);
         
         if (!$annonces) {
             throw $this->createNotFoundException();
