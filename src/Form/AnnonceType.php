@@ -3,13 +3,11 @@
 namespace App\Form;
 
 use App\Entity\Annonce;
-use App\Entity\Tag;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -40,6 +38,7 @@ class AnnonceType extends AbstractType
                 'by_reference' => false,
                 'allow_delete' => true,
             ])
+            ->add('address', AddressType::class)
         ;
     }
 

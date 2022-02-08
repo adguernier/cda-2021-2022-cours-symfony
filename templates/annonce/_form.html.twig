@@ -3,6 +3,7 @@
     {{ form_row(form.description) }}
     {{ form_row(form.price) }}
     {{ form_row(form.status) }}
+    {{ form_row(form.address) }}
 
     <ul class="tags"
         data-index="{{ form.tags|length > 0 ? form.tags|last.vars.name + 1 : 0 }}"
