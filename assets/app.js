@@ -13,3 +13,5 @@ import './bootstrap';
 
 // add Bootstrap JS
 import 'bootstrap';
+
+import './js/searchAnnonceByTag';

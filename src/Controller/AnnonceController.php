@@ -203,4 +203,15 @@ class AnnonceController extends AbstractController
 
         return $this->redirectToRoute('app_annonce_index');
     }
+
+    /**
+     * @Route("/annonce-by-tag/{id<\d+>}")
+     */
+    public function annonceByTag(Tag $tag)
+    {
+        return $this->render('annonce/index.html.twig', [
+            'annonces' => $tag->getAnnonces(),
+            'selectedTagId' => $tag->getId()
+        ]);
+    }
 }

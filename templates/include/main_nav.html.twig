@@ -21,9 +21,14 @@
 					{% endif %}
 				</li>
 				<li>
-					<select name="menu_tags" id="">
+					<select name="search_by_tags" class="select">
 						{% for tag in global_tags %}
-							<option value="{{ tag.id }}">{{ tag.name }}</option>
+							<option
+								value="{{ tag.id }}"
+								{% if selectedTagId is defined and selectedTagId == tag.id %}selected{% endif %}
+							>
+								{{ tag.name }}
+							</option>
 						{% endfor %}
 					</select>
 				</li>
