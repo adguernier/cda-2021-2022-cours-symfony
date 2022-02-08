@@ -5,6 +5,8 @@
     {{ form_row(form.status) }}
     {{ form_row(form.address) }}
 
+    <ul class="addressAutocompleteResult"></ul>
+
     <ul class="tags"
         data-index="{{ form.tags|length > 0 ? form.tags|last.vars.name + 1 : 0 }}"
         data-prototype="{{ form_widget(form.tags.vars.prototype)|e('html_attr') }}"
@@ -13,7 +15,8 @@
             <li>{{ form_row(tag.name) }}</li>
         {% endfor %}
     </ul>
-    <button type="button" class="add_item_link" data-collection-holder-class="tags">Add a tag</button>
+    <button type="button" class="add_item_link btn btn-success" data-collection-holder-class="tags">Add a tag</button>
+    <br>
     <input class="btn btn-primary" type="submit" value={{ button_label }}>
 {{ form_end(form) }}
 

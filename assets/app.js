@@ -15,3 +15,4 @@ import './bootstrap';
 import 'bootstrap';
 
 import './js/searchAnnonceByTag';
+import './js/addressAutocomplete';

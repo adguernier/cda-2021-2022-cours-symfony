@@ -38,7 +38,7 @@ class AnnonceType extends AbstractType
                 'by_reference' => false,
                 'allow_delete' => true,
             ])
-            ->add('address', AddressType::class)
+            ->add('address', AddressAutocompleteType::class)
         ;
     }
 
