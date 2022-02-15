@@ -1,5 +1,10 @@
 {% extends "layout/full_width.html.twig" %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('mapAnnonce') }}
+{% endblock %}
+
 {% block content %}   
     <div class="row">
         {% for annonce in annonces %}
@@ -12,4 +17,11 @@
             </div>
         {% endfor %}
     </div>
+    <button class="btn btn-primary" id="localizeMe" type="button">Me localiser</button>
+    <div id="map" style="height:500px"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('mapAnnonce') }}
 {% endblock %}
