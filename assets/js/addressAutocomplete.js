@@ -38,7 +38,9 @@ addressAutocompleteSelector.addEventListener('keyup', (e) => {
                 lonElement.value = el.geometry.coordinates[0]
                 latElement.value = el.geometry.coordinates[1]
                 streetElement.value = el.properties.name
-                streetNumberElement.value = el.properties.housenumber
+                if (typeof el.properties.housenumber !== "undefined") {
+                    streetNumberElement.value = el.properties.housenumber
+                }
                 zipCodeElement.value = el.properties.citycode
                 cityElement.value = el.properties.city
             })
