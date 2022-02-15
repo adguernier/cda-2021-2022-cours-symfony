@@ -112,7 +112,7 @@ class Annonce
     private $tags;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Address::class, inversedBy="annonce")
+     * @ORM\ManyToOne(targetEntity=Address::class, inversedBy="annonce", cascade={"persist"})
      */
     private $address;
 
