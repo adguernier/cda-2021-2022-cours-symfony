@@ -7,19 +7,31 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class AnnonceController extends AbstractController
 {
     /**
      * @Route("/api/annonce/search-by-position")
      */
-    public function searchByPosition(Request $request, AddressRepository $addressRepository): Response
+    public function searchByPosition(
+        Request $request, 
+        AddressRepository $addressRepository
+    ): Response
     {
-        $lat = $request->query->get('lat');
-        $lng = $request->query->get('lon');
+        $lat = $request->query->get('lat', 48.5914309773888);
+        $lng = $request->query->get('lon', 7.705663193322531);
+
         $radius = $request->query->get('radius', 10);
 
         $addresses = $addressRepository->findByPosition($lat, $lng, $radius);
-        dd($addresses);
+
+        return $this->json($addresses, 200, [], [
+            'groups' => ['address', 'annonce']
+        ]);
     }
 }
