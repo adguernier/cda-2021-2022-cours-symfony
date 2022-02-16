@@ -14,6 +14,7 @@ const baseLng = 2.289697034198719
 const map = L.map('map').setView([baseLat, baseLng], 13)
 const localizeMeEl = document.querySelector('#localizeMe')
 let userMarker = L.marker([baseLat, baseLng]).addTo(map)
+const apiUrl = '/api/annonce/search-by-position'
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -33,6 +34,18 @@ function localizeMe() {
             map.setView([position.coords.latitude, position.coords.longitude], 13)
             userMarker.setLatLng(L.latLng(position.coords.latitude, position.coords.longitude))
             userMarker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup()
+            const promise = fetch(apiUrl + '?lat='+position.coords.latitude+'&lon='+position.coords.longitude+'&radius=50')
+            promise.then(response => response.json())
+            .then(json => {
+                json.forEach(address => {
+                    let html = ''
+                    address.annonce.forEach(annonce => {
+                        html += '<p><a href="/annonce/'+annonce.id+'">'+annonce.title+' ('+annonce.price+'€)</a></p>'
+                    });
+                    
+                    const marker = L.marker([address.lat, address.lon]).addTo(map).bindPopup(html)
+                });
+            })
         });
     }
 }
