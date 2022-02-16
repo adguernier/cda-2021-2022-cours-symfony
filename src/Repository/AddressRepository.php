@@ -19,6 +19,17 @@ class AddressRepository extends ServiceEntityRepository
         parent::__construct($registry, Address::class);
     }
 
+    public function findByPosition($lat, $lon, $radius)
+    {
+        $qb = $this->createQueryBuilder('a');
+        $haversineFormula = "( 6371 * acos( cos( radians($lat) ) * cos( radians( a.lat ) ) 
+        * cos( radians( a.lon ) - radians($lon) ) + sin( radians($lat) ) * sin(radians(a.lat)) ) ) <= :radius"; 
+        $qb->andWhere($haversineFormula);
+        $qb->setParameter('radius', $radius);
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+
     // /**
     //  * @return Address[] Returns an array of Address objects
     //  */
