@@ -1,24 +1,13 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-5">
 	<div class="container-fluid">
-		<a class="navbar-brand" href="#">Gif NFT</a>
+		<a class="navbar-brand" href="{{ path('app_home_index') }}">Gif NFT</a>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="navbarNav">
-			<ul class="navbar-nav">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 				<li class="nav-item">
-					<a class="nav-link" href="#">Home</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Annonces</a>
-				</li>
-				<li>
-					{% if app.user %}
-						<a class="nav-link" href={{ path('app_logout') }}>Se déconnecter</a>
-					{% else %}
-						<a class="nav-link" href={{ path('app_login') }}>Se connecter</a>
-						<a class="nav-link" href={{ path('app_register') }}>Créer un compte</a>
-					{% endif %}
+					<a class="nav-link" href="{{ path('app_annonce_index') }}">Annonces</a>
 				</li>
 				<li>
 					<select name="search_by_tags" class="select">
@@ -33,6 +22,22 @@
 					</select>
 				</li>
 			</ul>
+			<div class="d-flex">
+				<div class="dropdown">
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+						{% if app.user %}{{ app.user.email }}{% else %}Mon compte{% endif %}
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="userMenu">
+					{% if app.user %}
+						<li><a class="dropdown-item" href="{{ path('app_annonce_new') }}">Créer une annonce</a></li>
+						<li><a class="dropdown-item" href="{{ path('app_logout') }}">Se déconnecter</a></li>
+					{% else %}
+						<li><a class="dropdown-item" href="{{ path('app_login') }}">Se connecter</a></li>
+						<li><a class="dropdown-item" href="{{ path('app_register') }}">Créer un compte</a></li>
+					{% endif %}
+					</ul>
+				</div>
+			</div>
 		</div>
 	</div>
 </nav>
