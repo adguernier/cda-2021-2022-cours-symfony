@@ -26,7 +26,7 @@ class AnnonceController extends AbstractController
         $addresses = $addressRepository->findByPosition($lat, $lng, $radius);
 
         return $this->json($addresses, Response::HTTP_OK, [], [
-            'groups' => ['address', 'annonce']
+            'groups' => ['read_address', 'read_annonce']
         ]);
     }
 }

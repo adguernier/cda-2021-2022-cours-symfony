@@ -2,23 +2,25 @@
 
 namespace App\Entity;
 
-use App\Repository\AnnonceRepository;
 use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\String\Slugger\AsciiSlugger;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Serializer\Annotation\Groups;
+use App\Repository\AnnonceRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\String\Slugger\AsciiSlugger;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=AnnonceRepository::class)
  * @UniqueEntity("slug")
  * @ORM\HasLifecycleCallbacks()
  * @ApiResource(
- *      normalizationContext={"groups"={"annonce"}}
+ *      normalizationContext={"groups"={"read_annonce"}},
+ *      denormalizationContext={"groups"={"write_annonce"}}
  * )
  */
 class Annonce
@@ -28,6 +30,11 @@ class Annonce
     public const STATUS_GOOD        = 2;
     public const STATUS_VERY_GOOD   = 3;
     public const STATUS_PERFECT     = 4;
+
+    public const STATUS = [
+        self::STATUS_VERY_BAD,
+        self::STATUS_BAD
+    ];
 
     /**
      * @ORM\PrePersist
@@ -53,7 +60,7 @@ class Annonce
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"annonce"})
+     * @Groups({"read_annonce", "write_annonce"})
      */
     private $id;
 
@@ -61,7 +68,7 @@ class Annonce
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      * @Assert\Length(min=4, max=255)
-     * @Groups({"annonce"})
+     * @Groups({"read_annonce", "write_annonce"})
      */
     private $title;
 
@@ -69,7 +76,7 @@ class Annonce
      * @ORM\Column(type="text")
      * @Assert\NotBlank
      * @Assert\Length(min=10, max=2000)
-     * @Groups({"annonce"})
+     * @Groups({"read_annonce", "write_annonce"})
      */
     private $description;
 
@@ -77,14 +84,14 @@ class Annonce
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
      * @Assert\Type("integer")
-     * @Groups({"annonce"})
+     * @Groups({"read_annonce", "write_annonce"})
      */
     private $price;
 
     /**
      * @ORM\Column(type="boolean")
      * @Assert\Type("boolean")
-     * @Groups({"annonce"})
+     * @Groups({"read_annonce", "write_annonce"})
      */
     private $isSold;
 
@@ -92,43 +99,52 @@ class Annonce
      * @ORM\Column(type="integer")
      * @Assert\Type("integer")
      * @Assert\LessThan(5)
-     * @Groups({"annonce"})
+     * @Groups({"read_annonce", "write_annonce"})
+     * @ApiProperty(
+     *      attributes={
+     *          "openapi_context"={
+    *               "type"="string",
+    *               "enum"=self::STATUS,
+    *           }
+     *      }
+     * )
      */
     private $status;
 
     /**
      * @ORM\Column(type="datetime_immutable")
-     * @Groups({"annonce"})
+     * @Groups({"read_annonce"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true, unique=true)
-     * @Groups({"annonce"})
+     * @Groups({"read_annonce"})
      */
     private $slug;
 
     /**
      * @ORM\Column(type="datetime_immutable")
-     * @Groups({"annonce"})
+     * @Groups({"read_annonce"})
      */
     private $updatedAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="annonces")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"user"})
+     * @Groups({"read_annonce", "write_annonce"})
      */
     private $user;
 
     /**
      * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="annonces", cascade={"persist"})
-     * @Groups({"tags"})
+     * @Groups({"read_annonce", "write_annonce"})
      */
     private $tags;
 
     /**
      * @ORM\ManyToOne(targetEntity=Address::class, inversedBy="annonce", cascade={"persist"})
+     * @Groups({"read_annonce", "write_annonce"})
      */
     private $address;
 
