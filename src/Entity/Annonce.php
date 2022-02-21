@@ -11,11 +11,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=AnnonceRepository::class)
  * @UniqueEntity("slug")
  * @ORM\HasLifecycleCallbacks()
+ * @ApiResource(
+ *      normalizationContext={"groups"={"annonce"}}
+ * )
  */
 class Annonce
 {
