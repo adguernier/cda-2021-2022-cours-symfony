@@ -14,7 +14,6 @@ const cityElement = document.querySelector('#annonce_address_city')
 
 addressAutocompleteSelector.addEventListener('keyup', (e) => {
     ulResult.innerHTML = ''
-    console.log(e.target.value.length <= 3)
     if (e.target.value.length <= 3)
         return
 
@@ -48,8 +47,4 @@ addressAutocompleteSelector.addEventListener('keyup', (e) => {
             ulResult.appendChild(li);
         })
     })
-
-    /*promise
-        .then(response => response.json())
-        .then(json => console.log(json))*/
 })

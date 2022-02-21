@@ -31,21 +31,67 @@ function localizeMe() {
     if ("geolocation" in navigator) {
         // demande à l'utilisateur sa position
         navigator.geolocation.getCurrentPosition(position => {
-            map.setView([position.coords.latitude, position.coords.longitude], 13)
-            userMarker.setLatLng(L.latLng(position.coords.latitude, position.coords.longitude))
-            userMarker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup()
-            const promise = fetch(apiUrl + '?lat='+position.coords.latitude+'&lon='+position.coords.longitude+'&radius=50')
-            promise.then(response => response.json())
-            .then(json => {
-                json.forEach(address => {
-                    let html = ''
-                    address.annonce.forEach(annonce => {
-                        html += '<p><a href="/annonce/'+annonce.id+'">'+annonce.title+' ('+annonce.price+'€)</a></p>'
-                    });
-                    
-                    const marker = L.marker([address.lat, address.lon]).addTo(map).bindPopup(html)
-                });
-            })
+            centerMap(position)
+            searchAddress(position)
         });
     }
 }
+
+function centerMap(position) {
+    map.setView([position.coords.latitude, position.coords.longitude], 13)
+    userMarker.setLatLng(L.latLng(position.coords.latitude, position.coords.longitude))
+    userMarker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup()
+    L.circle([position.coords.latitude, position.coords.longitude], {
+        color: 'blue',
+        fillColor: '#f03',
+        fillOpacity: 0.5,
+        radius: 5000
+    }).addTo(map);
+}
+
+function searchAddress(position) {
+    const promise = fetch(apiUrl + '?lat='+position.coords.latitude+'&lon='+position.coords.longitude+'&radius=50')
+    promise.then(response => response.json())
+    .then(json => {
+        json.forEach(address => {
+            let html = ''
+            address.annonce.forEach(annonce => {
+                html += '<p><a href="/annonce/'+annonce.id+'">'+annonce.title+' ('+annonce.price+'€)</a></p>'
+            });
+            
+            const marker = L.marker([address.lat, address.lon]).addTo(map).bindPopup(html)
+        });
+    })
+}
+
+
+document.querySelector('#localizeByAddress').addEventListener('keyup', (e) => {
+    const ulResult = document.querySelector('#localizeByAddressResult')
+    const input = e.target
+    ulResult.innerHTML = ''
+    if (e.target.value.length <= 3)
+        return
+
+    const promise = fetch('https://api-adresse.data.gouv.fr/search/?q=' + e.target.value)
+    promise.then(function(response){ 
+        return response.json()
+    }).then(function(json) {
+        json.features.forEach(el => {
+            const li = document.createElement('li');
+            li.addEventListener('click', e => {
+                input.value = e.target.textContent
+                ulResult.innerHTML = ''
+                const position = {
+                    coords: {
+                        latitude: el.geometry.coordinates[1],
+                        longitude: el.geometry.coordinates[0]
+                    }
+                }
+                centerMap(position)
+                searchAddress(position)
+            })
+            li.textContent = el.properties.label;
+            ulResult.appendChild(li);
+        })
+    })
+})
